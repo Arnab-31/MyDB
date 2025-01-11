@@ -1,5 +1,7 @@
+
+#include "include/parseCreateTableQuery.h"
+#include "../sql/include/SQLQuery.h"
 #include <string>
-#include "./SQLQuery.cpp"
 using namespace std;
 
 SQLQuery parseCreateTableQuery(const string& query) {
