@@ -6,7 +6,7 @@
 #include "parser/include/parseUpdateQuery.h"
 #include "sql/include/SQLQuery.h" 
 #include "./sql/include/Condition.h" 
-
+#include "parser/include/parseDeleteQuery.h"
 
 using namespace std;
 
@@ -20,7 +20,8 @@ int main() {
         "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
         "SELECT name, email FROM employees WHERE id = 100;",
         "SELECT name FROM employees;",
-        "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;"
+        "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
+        "DELETE FROM users WHERE id = 1;" // New DELETE query for testing
     };
 
     for (auto &q : queries) {
@@ -33,6 +34,8 @@ int main() {
             sqlQ = parseSelectQuery(q);
         } else if (q.rfind("UPDATE", 0) == 0) {
             sqlQ = parseUpdateQuery(q);
+        } else if (q.rfind("DELETE", 0) == 0) { // Handling DELETE queries
+            sqlQ = parseDeleteQuery(q);
         }
         cout << "Query: " << q << endl;
         cout << "Query Type: " << sqlQ.getQueryType() << endl;
@@ -65,6 +68,11 @@ int main() {
             for (const auto &pair : updates) {
                 cout << "  " << pair.first << " = " << pair.second << endl;
             }
+            if (!sqlQ.getWhereCondition().getColumnName().empty()) {
+                const Condition &cond = sqlQ.getWhereCondition();
+                cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
+            }
+        } else if (sqlQ.getQueryType() == "DELETE") { // Handling DELETE query output
             if (!sqlQ.getWhereCondition().getColumnName().empty()) {
                 const Condition &cond = sqlQ.getWhereCondition();
                 cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
