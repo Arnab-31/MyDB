@@ -7,6 +7,7 @@
 #include "sql/include/SQLQuery.h" 
 #include "./sql/include/Condition.h" 
 #include "parser/include/parseDeleteQuery.h"
+#include "parser/include/parseDropTableQuery.h"
 
 using namespace std;
 
@@ -21,7 +22,8 @@ int main() {
         "SELECT name, email FROM employees WHERE id = 100;",
         "SELECT name FROM employees;",
         "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
-        "DELETE FROM users WHERE id = 1;" // New DELETE query for testing
+        "DELETE FROM users WHERE id = 1;", // Existing DELETE query
+        "DROP TABLE example;" // New DROP TABLE query for testing
     };
 
     for (auto &q : queries) {
@@ -36,6 +38,8 @@ int main() {
             sqlQ = parseUpdateQuery(q);
         } else if (q.rfind("DELETE", 0) == 0) { // Handling DELETE queries
             sqlQ = parseDeleteQuery(q);
+        } else if (q.rfind("DROP", 0) == 0) { // Handling DROP TABLE queries
+            sqlQ = parseDropTableQuery(q);
         }
         cout << "Query: " << q << endl;
         cout << "Query Type: " << sqlQ.getQueryType() << endl;
@@ -77,6 +81,8 @@ int main() {
                 const Condition &cond = sqlQ.getWhereCondition();
                 cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
             }
+        } else if (sqlQ.getQueryType() == "DROP") { // Handling DROP TABLE query output
+            // No additional information to display for DROP
         }
         cout << "------------------------" << endl;
     }
