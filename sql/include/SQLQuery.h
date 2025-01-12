@@ -10,6 +10,7 @@ class SQLQuery {
     std::map<std::string, std::string> columnDefinitions;
     std::vector<std::string> insertValues;
     std::vector<std::string> selectValues;
+    std::map<std::string, std::string> updateValues;
     Condition whereCondition;
 
 public:
@@ -27,6 +28,9 @@ public:
 
     void addSelectValue(const std::string &val);
     const std::vector<std::string>& getSelectValues() const;
+
+    void addUpdateValue(const std::string &col, const std::string &val);
+    const std::map<std::string, std::string>& getUpdateValues() const;
 
     void setWhereCondition(const Condition &cond);
     const Condition& getWhereCondition() const;

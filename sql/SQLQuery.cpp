@@ -53,3 +53,11 @@ void SQLQuery::setWhereCondition(const Condition &cond) {
 const Condition& SQLQuery::getWhereCondition() const {
     return whereCondition;
 }
+
+void SQLQuery::addUpdateValue(const std::string &col, const std::string &val) {
+    updateValues[col] = val;
+}
+
+const std::map<std::string, std::string>& SQLQuery::getUpdateValues() const {
+    return updateValues;
+}

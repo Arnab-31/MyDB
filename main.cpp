@@ -3,8 +3,10 @@
 #include "parser/include/parseCreateTableQuery.h"
 #include "parser/include/parseInsertValueQuery.h"
 #include "parser/include/parseSelectQuery.h"
+#include "parser/include/parseUpdateQuery.h"
 #include "sql/include/SQLQuery.h" 
 #include "./sql/include/Condition.h" 
+
 
 using namespace std;
 
@@ -17,7 +19,8 @@ int main() {
         "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
         "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
         "SELECT name, email FROM employees WHERE id = 100;",
-        "SELECT name FROM employees;"
+        "SELECT name FROM employees;",
+        "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;"
     };
 
     for (auto &q : queries) {
@@ -28,6 +31,8 @@ int main() {
             sqlQ = parseInsertValueQuery(q);
         } else if (q.rfind("SELECT", 0) == 0) {
             sqlQ = parseSelectQuery(q);
+        } else if (q.rfind("UPDATE", 0) == 0) {
+            sqlQ = parseUpdateQuery(q);
         }
         cout << "Query: " << q << endl;
         cout << "Query Type: " << sqlQ.getQueryType() << endl;
@@ -50,6 +55,16 @@ int main() {
                 cout << c << " ";
             }
             cout << endl;
+            if (!sqlQ.getWhereCondition().getColumnName().empty()) {
+                const Condition &cond = sqlQ.getWhereCondition();
+                cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
+            }
+        } else if (sqlQ.getQueryType() == "UPDATE") {
+            const auto &updates = sqlQ.getUpdateValues();
+            cout << "Update Values:" << endl;
+            for (const auto &pair : updates) {
+                cout << "  " << pair.first << " = " << pair.second << endl;
+            }
             if (!sqlQ.getWhereCondition().getColumnName().empty()) {
                 const Condition &cond = sqlQ.getWhereCondition();
                 cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
