@@ -12,7 +12,7 @@ void Condition::setColumnName(const std::string& col) {
 
 void Condition::setConditionOperator(const std::string& op) {
     conditionOperator = op;
-}
+}  
 
 void Condition::setValue(const std::string& val) {
     value = val;
