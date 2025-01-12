@@ -1,16 +1,10 @@
-
 #pragma once
 #include <string>
-#include <map>
-#include <vector>
-
-using namespace std;
 
 class Condition {
-private:
-    std::string columnName;        // e.g. "id"
-    std::string conditionOperator; // e.g. "<", ">", "=="
-    std::string value;             // e.g. "10"
+    std::string columnName;
+    std::string conditionOperator;
+    std::string value;
 
 public:
     Condition();
