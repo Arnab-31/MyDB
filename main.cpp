@@ -8,22 +8,24 @@
 #include "./sql/include/Condition.h" 
 #include "parser/include/parseDeleteQuery.h"
 #include "parser/include/parseDropTableQuery.h"
+#include "sql/include/createTableCSV.h"
 
 using namespace std;
 
 int main() {
     vector<string> queries{
-        "CREATE TABLE example (id INT, name VARCHAR);",
-        "INSERT INTO users VALUES (1,'Alice','alice@example.com');",
-        "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
+        // "CREATE TABLE example (id INT, name VARCHAR);",
+        // "INSERT INTO users VALUES (1,'Alice','alice@example.com');",
+        // "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
         "CREATE TABLE orders (orderId INT, product VARCHAR, quantity INT);",
-        "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
-        "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
-        "SELECT name, email FROM employees WHERE id = 100;",
-        "SELECT name FROM employees;",
-        "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
-        "DELETE FROM users WHERE id = 1;", // Existing DELETE query
-        "DROP TABLE example;" // New DROP TABLE query for testing
+        // "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
+        // "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
+        // "SELECT name, email FROM employees WHERE id = 100;",
+        // "SELECT name FROM employees;",
+        // "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
+        // "DELETE FROM users WHERE id = 1;", // Existing DELETE query
+        // "DROP TABLE example;" // New DROP TABLE query for testing
+        "CREATE TABLE example (id INT, name VARCHAR);",
     };
 
     for (auto &q : queries) {
@@ -50,6 +52,7 @@ int main() {
             for (auto& kv : cols) {
                 cout << "Column: " << kv.first << ", Type: " << kv.second << endl;
             }
+            createTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "INSERT") {
             const auto& values = sqlQ.getInsertValues();
             for (const auto& val : values) {
