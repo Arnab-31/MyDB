@@ -11,6 +11,7 @@
 #include "sql/include/createTableCSV.h"
 #include "sql/include/insertTableCSV.h"
 #include "sql/include/selectTableCSV.h"
+#include "sql/include/updateTableCSV.h"
 
 using namespace std;
 
@@ -25,9 +26,9 @@ int main() {
         //"CREATE TABLE orders (orderId INT, product VARCHAR, quantity INT);",
         // "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
         // "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
-         "SELECT firstName, lastName FROM employees WHERE firstName = 'Alice';",
+        // "SELECT firstName, lastName FROM employees WHERE firstName = 'Alice';",
         // "SELECT name FROM employees;",
-        // "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
+         "UPDATE employees SET firstName = 'Raj2';",
         // "DELETE FROM users WHERE id = 1;", // Existing DELETE query
         // "DROP TABLE example;" // New DROP TABLE query for testing
         //"CREATE TABLE example (id INT, name VARCHAR);",
@@ -59,15 +60,7 @@ int main() {
         } else if (sqlQ.getQueryType() == "SELECT") {
             selectFromTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "UPDATE") {
-            const auto &updates = sqlQ.getUpdateValues();
-            cout << "Update Values:" << endl;
-            for (const auto &pair : updates) {
-                cout << "  " << pair.first << " = " << pair.second << endl;
-            }
-            if (!sqlQ.getWhereCondition().getColumnName().empty()) {
-                const Condition &cond = sqlQ.getWhereCondition();
-                cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
-            }
+            updateTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "DELETE") { // Handling DELETE query output
             if (!sqlQ.getWhereCondition().getColumnName().empty()) {
                 const Condition &cond = sqlQ.getWhereCondition();
