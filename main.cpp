@@ -10,20 +10,22 @@
 #include "parser/include/parseDropTableQuery.h"
 #include "sql/include/createTableCSV.h"
 #include "sql/include/insertTableCSV.h"
+#include "sql/include/selectTableCSV.h"
 
 using namespace std;
 
 int main() {
     vector<string> queries{
-        "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
-        "INSERT INTO employees VALUES (1,'Alice','alice@example.com');",
-        "INSERT INTO employees VALUES (2,'Alice','alice@example.com');",
-        "INSERT INTO employees VALUES (3,'Alice','alice@example.com');",
+        // "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
+        // "INSERT INTO employees VALUES (1,'Alice','alice@example.com');",
+        // "INSERT INTO employees VALUES (2,'Alice','alice@example.com');",
+        // "INSERT INTO employees VALUES (3,'Alice','alice@example.com');",
+        // "SELECT name FROM employees;",
         //"CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
         //"CREATE TABLE orders (orderId INT, product VARCHAR, quantity INT);",
         // "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
         // "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
-        // "SELECT name, email FROM employees WHERE id = 100;",
+         "SELECT firstName, lastName FROM employees WHERE firstName = 'Alice';",
         // "SELECT name FROM employees;",
         // "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
         // "DELETE FROM users WHERE id = 1;", // Existing DELETE query
@@ -51,24 +53,11 @@ int main() {
         cout << "Table Name: " << sqlQ.getTableName() << endl;
 
         if (sqlQ.getQueryType() == "CREATE") {
-            const auto& cols = sqlQ.getColumnDefinitions();
-            for (auto& kv : cols) {
-                cout << "Column: " << kv.first << ", Type: " << kv.second << endl;
-            }
             createTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "INSERT") {
             insertIntoTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "SELECT") {
-            const auto &cols = sqlQ.getSelectValues();
-            cout << "Selected Columns: ";
-            for (const auto &c : cols) {
-                cout << c << " ";
-            }
-            cout << endl;
-            if (!sqlQ.getWhereCondition().getColumnName().empty()) {
-                const Condition &cond = sqlQ.getWhereCondition();
-                cout << "WHERE Clause: " << cond.getColumnName() << " " << cond.getConditionOperator() << " " << cond.getValue() << endl;
-            }
+            selectFromTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "UPDATE") {
             const auto &updates = sqlQ.getUpdateValues();
             cout << "Update Values:" << endl;
@@ -87,7 +76,6 @@ int main() {
         } else if (sqlQ.getQueryType() == "DROP") { // Handling DROP TABLE query output
             // No additional information to display for DROP
         }
-        cout << "------------------------" << endl;
     }
 
     return 0;

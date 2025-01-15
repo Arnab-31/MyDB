@@ -66,6 +66,10 @@ SQLQuery parseSelectQuery(const std::string &query) {
         if (first != std::string::npos && last != std::string::npos) {
             wherePart = wherePart.substr(first, last - first + 1);
         }
+        // Remove trailing semicolon if present
+        if (!wherePart.empty() && wherePart.back() == ';') {
+            wherePart.pop_back();
+        }
         // Simple condition parsing (e.g., "id = 1")
         size_t opPos = wherePart.find('=');
         if (opPos != std::string::npos) {
