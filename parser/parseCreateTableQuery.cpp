@@ -1,8 +1,14 @@
-
 #include "include/parseCreateTableQuery.h"
 #include "../sql/include/SQLQuery.h"
 #include <string>
+#include <algorithm>
+#include <cctype>
 using namespace std;
+
+static void trimSpaces(std::string &s) {
+    while (!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin());
+    while (!s.empty() && std::isspace((unsigned char)s.back())) s.pop_back();
+}
 
 SQLQuery parseCreateTableQuery(const string& query) {
     SQLQuery result;
@@ -32,13 +38,14 @@ SQLQuery parseCreateTableQuery(const string& query) {
         while ((next = columnsPart.find(',', prev)) != string::npos) {
             string colDef = columnsPart.substr(prev, next - prev);
             // Trim leading/trailing spaces
-            while (!colDef.empty() && isspace(colDef.front())) colDef.erase(colDef.begin());
-            while (!colDef.empty() && isspace(colDef.back())) colDef.pop_back();
+            trimSpaces(colDef);
 
             size_t spacePos = colDef.find(' ');
             if (spacePos != string::npos) {
                 string colName = colDef.substr(0, spacePos);
                 string colType = colDef.substr(spacePos + 1);
+                trimSpaces(colName);
+                trimSpaces(colType);
                 result.addColumnDefinition(colName, colType);
             }
             prev = next + 1;
@@ -46,13 +53,14 @@ SQLQuery parseCreateTableQuery(const string& query) {
 
         // Handle the last column
         string colDef = columnsPart.substr(prev);
-        while (!colDef.empty() && isspace(colDef.front())) colDef.erase(colDef.begin());
-        while (!colDef.empty() && isspace(colDef.back())) colDef.pop_back();
+        trimSpaces(colDef);
 
         size_t spacePos = colDef.find(' ');
         if (spacePos != string::npos) {
             string colName = colDef.substr(0, spacePos);
             string colType = colDef.substr(spacePos + 1);
+            trimSpaces(colName);
+            trimSpaces(colType);
             result.addColumnDefinition(colName, colType);
         }
     }

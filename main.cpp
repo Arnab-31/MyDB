@@ -9,15 +9,18 @@
 #include "parser/include/parseDeleteQuery.h"
 #include "parser/include/parseDropTableQuery.h"
 #include "sql/include/createTableCSV.h"
+#include "sql/include/insertTableCSV.h"
 
 using namespace std;
 
 int main() {
     vector<string> queries{
-        // "CREATE TABLE example (id INT, name VARCHAR);",
-        // "INSERT INTO users VALUES (1,'Alice','alice@example.com');",
-        // "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
-        "CREATE TABLE orders (orderId INT, product VARCHAR, quantity INT);",
+        "CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
+        "INSERT INTO employees VALUES (1,'Alice','alice@example.com');",
+        "INSERT INTO employees VALUES (2,'Alice','alice@example.com');",
+        "INSERT INTO employees VALUES (3,'Alice','alice@example.com');",
+        //"CREATE TABLE employees (empId INT, firstName VARCHAR, lastName VARCHAR);",
+        //"CREATE TABLE orders (orderId INT, product VARCHAR, quantity INT);",
         // "CREATE TABLE inventory (sku VARCHAR, qty INT, location VARCHAR);",
         // "CREATE TABLE customers (custId INT, fullName VARCHAR, email VARCHAR, phone VARCHAR);",
         // "SELECT name, email FROM employees WHERE id = 100;",
@@ -25,7 +28,7 @@ int main() {
         // "UPDATE users SET email = 'newalice@example.com', name = 'Raj' WHERE id = 1;",
         // "DELETE FROM users WHERE id = 1;", // Existing DELETE query
         // "DROP TABLE example;" // New DROP TABLE query for testing
-        "CREATE TABLE example (id INT, name VARCHAR);",
+        //"CREATE TABLE example (id INT, name VARCHAR);",
     };
 
     for (auto &q : queries) {
@@ -54,10 +57,7 @@ int main() {
             }
             createTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "INSERT") {
-            const auto& values = sqlQ.getInsertValues();
-            for (const auto& val : values) {
-                cout << "Value: " << val << endl;
-            }
+            insertIntoTableCSV(sqlQ);
         } else if (sqlQ.getQueryType() == "SELECT") {
             const auto &cols = sqlQ.getSelectValues();
             cout << "Selected Columns: ";
